@@ -133,8 +133,12 @@ def edit(oldnames):
     ret = system('%s %s' % (editor, tmpfilename))
     if ret == 0: # editor exited gracefully
         try:
-            newnames = readlines(tmpfd)       
+            # on OSX, we need to reopen the file to pick up changes:
             close(tmpfd)
+            with open(tmpfilename) as newfile:
+                newnames = newfile.readlines()
+            del newfile
+            #newnames = readlines(tmpfd)       
             remove(tmpfilename)
         except OSError, e:
             giveup("%s: %s", (tmpfilename, str(e)))
