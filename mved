@@ -81,18 +81,18 @@ def warn(message):
 
 def usage(long = 0):
     """ print usage information. """
-    print 'mved %s - an editor-focused multiple file move utility' % version
+    print('mved %s - an editor-focused multiple file move utility' % version)
     if long: 
-        print LICENSE
-        print DIRECTIONS
-    print USAGE
+        print(LICENSE)
+        print(DIRECTIONS)
+    print(USAGE)
 
 def getoptions():
     """ get options. returns a list of all non-option arguments. """
     global editor, force
     try:
-         options, args = getopt(argv[1:], 'he:f', ['help', 'editor=','force'])
-    except GetoptError, e:
+        options, args = getopt(argv[1:], 'he:f', ['help', 'editor=', 'force'])
+    except GetoptError as e:
         giveup(str(e) + ", try 'mved --help' for more information.")
     
     for opt, arg in options:
@@ -122,7 +122,7 @@ def edit(oldnames):
         for name in oldnames:
             write(tmpfd, '%s\n' % name)
         fsync(tmpfd)
-    except IOError, e:
+    except IOError as e:
         giveup("%s: %s", (tmpfilename, str(e)))
     
     # warn user if EDITOR is not an absolute path
@@ -140,9 +140,9 @@ def edit(oldnames):
             del newfile
             #newnames = readlines(tmpfd)       
             remove(tmpfilename)
-        except OSError, e:
+        except OSError as e:
             giveup("%s: %s", (tmpfilename, str(e)))
-        except IOError, e:
+        except IOError as e:
             giveup("%s: %s", (tmpfilename, str(e)))
         for i in range(len(newnames)):
             newnames[i] = newnames[i].strip('\n')
@@ -155,7 +155,7 @@ def edit(oldnames):
     else:
         try:
             remove(tmpfilename)
-        except IOError, e:
+        except IOError as e:
             warn("Could not remove %s: %s", (tmpfilename, str(e)))
         giveup('Editor exited ungracefully.')
 
@@ -405,27 +405,27 @@ if __name__ == '__main__':
         msg += '1 does not'
     else: 
         msg += '%i do not' % dontchange
-    print msg
+    print(msg)
     
     renamer.checkrenamings(force)
     sequence = renamer.renamingsequence()
 
     for i in sequence:
         try:
-            print "moving %s -> %s " % (i.frm, i.to)
+            print("moving %s -> %s " % (i.frm, i.to))
             if force == 0 and exists.exists(i.to):
                 sched = ""
                 for i in sequence:
                     sched += "\n%s -> %s" % (i.frm, i.to)
-                print "error detected. moving schedule was: %s " % sched
+                print("error detected. moving schedule was: %s " % sched)
                 giveup("will not overwrite %s\n** RENAMING INTERRUPTED **" \
                    % i.to)
             rename(i.frm, expanduser(i.to))
-        except OSError, e:
+        except OSError as e:
             sched = ""
             for i in sequence:
                 sched += "\n%s -> %s" % (i.frm, i.to)
-            print "error detected. moving schedule was: %s" % sched
+            print("error detected. moving schedule was: %s" % sched)
             giveup("Could not rename %s to %s: %s\n** RENAMING INTERRUPTED **" \
                 % (i.frm, i.to, str(e)))
           
