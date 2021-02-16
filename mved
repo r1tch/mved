@@ -123,7 +123,7 @@ def edit(oldnames):
     tmpfd, tmpfilename = mkstemp()
     try:
         for name in oldnames:
-            write(tmpfd, '%s\n' % name)
+            write(tmpfd, ('%s\n' % name).encode())
         fsync(tmpfd)
     except IOError as e:
         giveup("%s: %s", (tmpfilename, str(e)))
